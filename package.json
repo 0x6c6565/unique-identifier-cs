@@ -1,0 +1,18 @@
+{
+  "name": "unique-identifiers",
+  "version": "1.0.0",
+  "displayName": "Unique Identifiers",
+  "description": "Unique identifiers for use in Unity.",
+  "unity": "6000.3",
+  "keywords": [
+    "Guid",
+    "Guid64",
+    "Guid128",
+    "Unique identifier"
+  ],
+  "author": {
+    "name": "Lee Wood",
+    "url": "https://github.com/0x6c6565/UniqueIdentifiers",
+    "email": "0x6c6565@gmail.com"
+  }
+}
