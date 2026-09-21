@@ -10,6 +10,9 @@
     "Guid128",
     "Unique identifier"
   ],
+  "dependencies": {
+    "com.unity.nuget.newtonsoft-json": "3.2.0"
+  },
   "author": {
     "name": "Lee Wood",
     "url": "https://github.com/0x6c6565/UniqueIdentifiers",
