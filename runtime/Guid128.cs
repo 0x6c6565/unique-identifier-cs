@@ -14,7 +14,7 @@ namespace UniqueIdentifiers
 	/// </summary>
 	[Serializable]
 	[StructLayout(LayoutKind.Explicit, Pack = 1, Size = 16)]
-	public struct Guid128 : IEquatable<Guid128>, IEquatable<Guid>
+	public partial struct Guid128 : IEquatable<Guid128>, IEquatable<Guid>
 	{
 		/// <summary>Used for comparisons with a known invalid guid.</summary>
 		public static readonly Guid128 Empty = Guid.Empty;
