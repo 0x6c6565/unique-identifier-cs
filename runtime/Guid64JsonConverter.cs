@@ -1,3 +1,5 @@
+#if USING_NEWTONSOFT_JSON
+
 using System;
 
 using Newtonsoft.Json;
@@ -28,3 +30,5 @@ namespace UniqueIdentifiers
 		}
 	}
 }
+
+#endif // USING_NEWTONSOFT_JSON
