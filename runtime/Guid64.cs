@@ -15,7 +15,7 @@ namespace UniqueIdentifiers
 	/// </summary>
 	[Serializable]
 	[StructLayout(LayoutKind.Explicit, Pack = 1, Size = 8)]
-	public struct Guid64 : IEquatable<Guid64>
+	public partial struct Guid64 : IEquatable<Guid64>
 	{
 		/// <summary>This is for comparisons (same as default.)</summary>
 		public static readonly Guid64 Empty = default;

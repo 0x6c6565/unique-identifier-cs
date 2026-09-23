@@ -1,7 +1,9 @@
 {
     "name": "UniqueIdentifiers",
     "rootNamespace": "UniqueIdentifiers",
-    "references": [],
+    "references": [
+        "Unity.Netcode.Runtime"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": true,
@@ -16,6 +18,11 @@
             "name": "com.unity.nuget.newtonsoft-json",
             "expression": "3.2.2",
             "define": "USING_NEWTONSOFT_JSON"
+        },
+        {
+            "name": "com.unity.netcode.gameobjects",
+            "expression": "1.0.0",
+            "define": "USING_NETCODE_FOR_GAMEOBJECTS"
         }
     ],
     "noEngineReferences": false
