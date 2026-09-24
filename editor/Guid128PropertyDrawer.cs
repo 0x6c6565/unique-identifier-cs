@@ -65,6 +65,75 @@ namespace UniqueIdentifiers.Editor
 			return root;
 		}
 
+		public override void OnGUI(Rect rect, SerializedProperty property, GUIContent label)
+		{
+			Guid128 guid = ToGuid128(property);
+
+			EditorGUI.LabelField(rect, label.text, guid.ToString());
+
+			if (null != Event.current && EventType.ContextClick == Event.current.type)
+			{
+				if (rect.Contains(Event.current.mousePosition))
+				{
+					GenericMenu menu = new GenericMenu();
+					menu.AddItem(new GUIContent("New Guid128"), 
+								 false, 
+								 prop => AssignGuid128(prop as SerializedProperty, Guid128.NewGuid128()),
+								 property);
+
+					if (Guid128.Empty != guid)
+					{
+						menu.AddItem(new GUIContent("Copy"), 
+									 false, 
+									 prop => systemCopyBuffer = ((Guid128)prop).ToString(),
+									 guid);
+					}
+					else
+					{
+						menu.AddDisabledItem(new GUIContent("Copy"));
+					}
+
+					if (Guid128.TryParse(systemCopyBuffer, out Guid128 clipboard))
+					{
+						if (clipboard != guid)
+						{
+							menu.AddItem(new GUIContent("Paste"), 
+										 false,
+										 prop =>
+										 {
+											 if (Guid128.TryParse(systemCopyBuffer, out Guid128 clipboard))
+											 {
+												 AssignGuid128(prop as SerializedProperty, clipboard);
+											 }
+										 },
+										 property);
+						}
+						else
+						{
+							menu.AddDisabledItem(new GUIContent("Paste"));
+						}
+					}
+					else
+					{
+						menu.AddDisabledItem(new GUIContent("Paste"));
+					}
+
+					if (Guid128.Empty == guid)
+					{
+						menu.AddDisabledItem(new GUIContent("Make Empty"));
+					}
+					else
+					{
+						menu.AddItem(new GUIContent("Make Empty"), false,
+									 prop => AssignGuid128(prop as SerializedProperty, Guid128.Empty),
+									 property);
+					}
+
+					menu.ShowAsContext();
+				}
+			}
+		}
+
 		/// <summary></summary>
 		/// <param name="property"></param>
 		/// <param name="guid"></param>
