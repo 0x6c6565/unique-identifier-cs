@@ -99,66 +99,72 @@ namespace UniqueIdentifiers
 		{
 			guid = default;
 
+			if (null == value)
+			{
+				return false;
+			}
+
 			value = value.Trim();
-			if (18 == value.Length)
+			if (18 != value.Length || '-' != value[8] || '-' != value[13])
 			{
-				if ('-' == value[8] && '-' == value[13])
-				{
-					bool success = false;
-					guid.a = DecodeByte(value, 6, 7, ref success);
-					guid.b = DecodeByte(value, 4, 5, ref success);
-					guid.c = DecodeByte(value, 2, 3, ref success);
-					guid.d = DecodeByte(value, 0, 1, ref success);
-
-					guid.e = DecodeByte(value, 11, 12, ref success);
-					guid.f = DecodeByte(value, 9, 10, ref success);
-
-					guid.g = DecodeByte(value, 16, 17, ref success);
-					guid.h = DecodeByte(value, 14, 15, ref success);
-
-					if (success)
-					{
-						if (!BitConverter.IsLittleEndian) // Consistency with Guid128
-						{
-							guid.firstFour = BinaryPrimitives.ReverseEndianness(guid.firstFour);
-							guid.thirdTwo = BinaryPrimitives.ReverseEndianness(guid.thirdTwo);
-							guid.fourthTwo = BinaryPrimitives.ReverseEndianness(guid.fourthTwo);
-						}
-
-						return true;
-					}
-				}
+				return false;
 			}
 
+			if (!TryDecodeByte(value, 6, 7, out guid.a)
+				|| !TryDecodeByte(value, 4, 5, out guid.b)
+				|| !TryDecodeByte(value, 2, 3, out guid.c)
+				|| !TryDecodeByte(value, 0, 1, out guid.d)
+				|| !TryDecodeByte(value, 11, 12, out guid.e)
+				|| !TryDecodeByte(value, 9, 10, out guid.f)
+				|| !TryDecodeByte(value, 16, 17, out guid.g)
+				|| !TryDecodeByte(value, 14, 15, out guid.h))
+			{
+				guid = default;
+				return false;
+			}
+
+			if (!BitConverter.IsLittleEndian) // Consistency with Guid128
+			{
+				guid.firstFour = BinaryPrimitives.ReverseEndianness(guid.firstFour);
+				guid.thirdTwo = BinaryPrimitives.ReverseEndianness(guid.thirdTwo);
+				guid.fourthTwo = BinaryPrimitives.ReverseEndianness(guid.fourthTwo);
+			}
+
+			return true;
+		}
+
+		static bool TryDecodeByte(string value, int highIndex, int lowIndex, out byte result)
+		{
+			result = 0;
+			if (!TryDecodeHex(value[highIndex], out int high) || !TryDecodeHex(value[lowIndex], out int low))
+			{
+				return false;
+			}
+
+			result = (byte)((high << 4) | low);
+			return true;
+		}
+
+		static bool TryDecodeHex(char value, out int nibble)
+		{
+			if ('0' <= value && '9' >= value)
+			{
+				nibble = value - '0';
+				return true;
+			}
+			if ('a' <= value && 'f' >= value)
+			{
+				nibble = value - 'a' + 10;
+				return true;
+			}
+			if ('A' <= value && 'F' >= value)
+			{
+				nibble = value - 'A' + 10;
+				return true;
+			}
+
+			nibble = 0;
 			return false;
-		}
-
-		static byte DecodeByte(in string value, int a, int b, ref bool success)
-			=> DecodeByte(value[a], value[b], ref success);
-		static byte DecodeByte(char a, char b, ref bool success)
-		{
-			byte firstNibble = DecodeHex(a);
-			if (16 > firstNibble)
-			{
-				byte secondNibble = DecodeHex(b);
-				if (16 > secondNibble)
-				{
-					byte result = (byte)((firstNibble << 4) | secondNibble);
-					success = true;
-
-					return result;
-				}
-			}
-
-			return 0;
-		}
-		static byte DecodeHex(char value)
-		{
-			const int zeroValue = 48;
-			const int aOffsetByZeroValue = 65 - zeroValue - 10;
-
-			int result = Convert.ToByte(char.ToUpper(value)) - zeroValue;
-			return (byte)(10 > result ? result : result - aOffsetByZeroValue);
 		}
 
 		/// <summary>For implicit equality comparisons.</summary>
