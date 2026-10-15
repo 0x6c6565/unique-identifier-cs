@@ -1,6 +1,6 @@
 {
   "name": "unique-identifiers",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "displayName": "Unique Identifiers",
   "description": "Unique identifiers for use in Unity.",
   "unity": "6000.3",
